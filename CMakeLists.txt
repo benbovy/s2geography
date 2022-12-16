@@ -1,12 +1,14 @@
 
 cmake_minimum_required(VERSION 3.11)
 
+project(S2Geography
+  LANGUAGES CXX
+  )
+
 include(FetchContent)
 include(GNUInstallDirs)
 
 message(STATUS "Building using CMake version: ${CMAKE_VERSION}")
-
-project(S2Geography)
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard to build with")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
