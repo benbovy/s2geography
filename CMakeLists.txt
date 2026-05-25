@@ -274,6 +274,7 @@ add_library(
   src/s2geography/geoarrow.cc
   src/s2geography/geography_interface.cc
   src/s2geography/geography.cc
+  src/s2geography/tessellate.cc
   src/s2geography/linear-referencing.cc
   src/s2geography/op/cell.cc
   src/s2geography/op/point.cc
@@ -390,6 +391,7 @@ if(S2GEOGRAPHY_BUILD_TESTS)
   add_executable(distance_test src/s2geography/distance_test.cc)
   add_executable(geoarrow_test src/s2geography/geoarrow_test.cc)
   add_executable(geography_test src/s2geography/geography_test.cc)
+  add_executable(tessellate_test src/s2geography/tessellate_test.cc)
   add_executable(linear_referencing_test
                  src/s2geography/linear-referencing_test.cc)
   add_executable(op_cell_test src/s2geography/op/cell_test.cc)
@@ -427,6 +429,9 @@ if(S2GEOGRAPHY_BUILD_TESTS)
     geography_test s2geography ${S2GEOGRAPHY_NANOARROW_TARGET}
     GTest::gtest_main GTest::gmock)
   target_link_libraries(
+    tessellate_test s2geography ${S2GEOGRAPHY_NANOARROW_TARGET}
+    GTest::gtest_main GTest::gmock)
+  target_link_libraries(
     linear_referencing_test s2geography ${S2GEOGRAPHY_NANOARROW_TARGET}
     GTest::gtest_main GTest::gmock)
   target_link_libraries(op_cell_test s2geography GTest::gtest_main)
@@ -446,6 +451,7 @@ if(S2GEOGRAPHY_BUILD_TESTS)
   target_include_directories(geoarrow_test PRIVATE src/vendored)
   target_include_directories(linear_referencing_test PRIVATE src/vendored)
   target_include_directories(predicates_test PRIVATE src/vendored)
+  target_include_directories(tessellate_test PRIVATE src/vendored)
   target_include_directories(geoarrow_geography_test PRIVATE src/vendored)
 
   include(GoogleTest)
@@ -459,6 +465,7 @@ if(S2GEOGRAPHY_BUILD_TESTS)
   gtest_discover_tests(op_cell_test)
   gtest_discover_tests(predicates_test)
   gtest_discover_tests(geography_test)
+  gtest_discover_tests(tessellate_test)
   gtest_discover_tests(wkt_writer_test)
   gtest_discover_tests(wkb_test)
   gtest_discover_tests(geoarrow_geography_test)

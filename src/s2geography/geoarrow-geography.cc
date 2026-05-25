@@ -32,16 +32,6 @@ void ReverseNodeInPlace(struct GeoArrowGeometryNode* node) {
   }
 }
 
-bool AllLngLatNaN(struct GeoArrowGeometryView geom) {
-  return internal::VisitGeoArrowNodes(
-      geom, [&](const struct GeoArrowGeometryNode* node) {
-        return internal::VisitLngLat(
-            node, 0, node->size, [&](double lng, double lat) {
-              return std::isnan(lng) && std::isnan(lat);
-            });
-      });
-}
-
 const char* GeometryTypeString(uint8_t geometry_type) {
   switch (geometry_type) {
     case GEOARROW_GEOMETRY_TYPE_POINT:
@@ -75,7 +65,7 @@ void GeoArrowPointShape::Init(struct GeoArrowGeometryView geom) {
       // Treat an empty point as MULTIPOINT EMPTY
       // geoarrow-c currently reads POINT EMPTY as nan nan instead of a
       // proper EMPTY
-      if (geom.root->size == 0 || AllLngLatNaN(geom)) {
+      if (geom.root->size == 0 || internal::AllLngLatNaN(geom)) {
         geom_ = {nullptr, 0};
       } else {
         geom_ = geom;
@@ -935,7 +925,7 @@ internal::GeoArrowEdge GeoArrowGeography::native_edge(int shape_id,
 
 namespace internal {
 
-GeoArrowVertex GeoArrowEdge::Interpolate(double fraction) {
+GeoArrowVertex GeoArrowEdge::Interpolate(double fraction) const {
   if (fraction <= 0) {
     return v0;
   } else if (fraction >= 1) {
@@ -956,7 +946,7 @@ GeoArrowVertex GeoArrowEdge::Interpolate(double fraction) {
           {v0.zm[0] + dzm0, v0.zm[1] + dzm1}};
 }
 
-GeoArrowVertex GeoArrowEdge::Interpolate(const S2Point& point) {
+GeoArrowVertex GeoArrowEdge::Interpolate(const S2Point& point) const {
   S2Point pt0 = v0.ToPoint();
   S2Point pt1 = v1.ToPoint();
 
